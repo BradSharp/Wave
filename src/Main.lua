@@ -1,9 +1,9 @@
 local Wave			= {}
-local Binding		= require(script.Binding)
+local State			= require(script.State)
 local SymbolCache	= require(script.SymbolCache)
 local Property		= SymbolCache.new()
 local Event			= SymbolCache.new()
-local Bind			= SymbolCache.new()
+local Binding		= SymbolCache.new()
 
 local function flatten(value)
 	local result = {}
@@ -97,7 +97,7 @@ function Wave.new(T, properties, children)
 		end
 		local KeyType, ValueType = getmetatable(key), getmetatable(value)
 		if KeyType == Property then
-			if ValueType == Binding then
+			if ValueType == State then
 				local function update(_, newValue)
 					assign(object, key.Key, newValue)
 				end
@@ -108,9 +108,9 @@ function Wave.new(T, properties, children)
 			end
 		elseif KeyType == Event then
 			table.insert(subscriptions, connect(object, key.Key, value))
-		elseif KeyType == Bind then
+		elseif KeyType == Binding then
 			local handler = value
-			if ValueType == Binding then
+			if ValueType == State then
 				handler = function ()
 					value:Set(object[key.Key])
 				end
@@ -127,9 +127,9 @@ function Wave.new(T, properties, children)
 	return object
 end
 
-Wave.Binding = Binding
+Wave.State = State
 Wave.Property = Property
 Wave.Event = Event
-Wave.Bind = Bind
+Wave.Binding = Binding
 
 return Wave

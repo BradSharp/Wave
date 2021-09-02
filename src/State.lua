@@ -1,35 +1,35 @@
-local Binding	= {__index={}}
+local State	= {__index={}}
 
-function Binding.new(initialValue)
+function State.new(initialValue)
 	return setmetatable({
 		__subscribers = {},
 		__value = initialValue
 	}, Binding)
 end
 
-function Binding.computeFrom(...)
-	local bindings = {...} -- TODO: Should we verify bindings doesn't contain a cyclic reference?
-	local compute = table.remove(bindings)
+function State.computeFrom(...)
+	local states = {...} -- TODO: Should we verify states doesn't contain a cyclic reference?
+	local compute = table.remove(states)
 	local self = Binding.new()
 	local function callback()
 		local values = {}
-		for i, binding in ipairs(bindings) do
+		for i, binding in ipairs(states) do
 			values[i] = binding:Get()
 		end
-		self:Set(compute(unpack(values, 1, #bindings)))
+		self:Set(compute(unpack(values, 1, #states)))
 	end
-	for i, binding in ipairs(bindings) do
+	for i, binding in ipairs(states) do
 		binding:Track(callback)
 	end
 	callback()
 	return self
 end
 
-function Binding.__index:Get()
+function State.__index:Get()
 	return self.__value
 end
 
-function Binding.__index:Set(newValue)
+function State.__index:Set(newValue)
 	local oldValue = self.__value
 	self.__value = newValue
 	for _, subscriber in ipairs(self.__subscribers) do
@@ -37,7 +37,7 @@ function Binding.__index:Set(newValue)
 	end
 end
 
-function Binding.__index:Track(callback)
+function State.__index:Track(callback)
 	if table.find(self.__subscribers, callback) then
 		return
 	end
@@ -47,7 +47,7 @@ function Binding.__index:Track(callback)
 	end
 end
 
-function Binding.__index:Untrack(callback)
+function State.__index:Untrack(callback)
 	for i, subscriber in ipairs(self.__subscribers) do
 		if subscriber == callback then
 			table.remove(self.__subscribers, i)
@@ -56,4 +56,4 @@ function Binding.__index:Untrack(callback)
 	end
 end
 
-return Binding
+return State
