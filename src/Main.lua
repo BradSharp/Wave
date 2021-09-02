@@ -95,7 +95,7 @@ local function update()
 		for property, value in pairs(properties) do
 			assign(instance, property, value)
 		end
-		dirtyProps[instance] = nil
+		dirty[instance] = nil
 	end
 end
 
@@ -113,10 +113,10 @@ function Wave.new(T, properties, children)
 		if KeyType == Property then
 			if ValueType == State then
 				local function queuePropertyUpdate(_, newValue)
-					local properties = dirtyProps[instance]
+					local properties = dirty[object]
 					if not properties then
 						properties = {}
-						dirty[instance] = properties
+						dirty[object] = properties
 					end
 					properties[key.Key] = newValue
 				end

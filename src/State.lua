@@ -13,13 +13,13 @@ function State.computeFrom(...)
 	local self = State.new()
 	local function callback()
 		local values = {}
-		for i, binding in ipairs(states) do
-			values[i] = binding:Get()
+		for i, state in ipairs(states) do
+			values[i] = state:Get()
 		end
 		self:Set(compute(unpack(values, 1, #states)))
 	end
-	for i, binding in ipairs(states) do
-		binding:Track(callback)
+	for i, state in ipairs(states) do
+		state:Track(callback)
 	end
 	callback()
 	return self
