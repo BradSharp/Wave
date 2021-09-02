@@ -3,9 +3,7 @@ local Binding	= {__index={}}
 function Binding.new(initialValue)
 	return setmetatable({
 		__subscribers = {},
-		__scheduled = false,
-		__value = initialValue,
-		__last = nil,
+		__value = initialValue
 	}, Binding)
 end
 
@@ -31,20 +29,11 @@ function Binding.__index:Get()
 	return self.__value
 end
 
-function Binding.__index:__resume()
-	local oldValue, newValue = self.__last, self.__value
-	self.__scheduled = false
-	self.__last = nil
+function Binding.__index:Set(newValue)
+	local oldValue = self.__value
+	self.__value = newValue
 	for _, subscriber in ipairs(self.__subscribers) do
 		subscriber(oldValue, newValue)
-	end
-end
-
-function Binding.__index:Set(newValue)
-	self.__value, self.__last = newValue, self.__value
-	if not self.__scheduled then
-		self.__scheduled = true
-		task.defer(self.__resume, self)
 	end
 end
 
