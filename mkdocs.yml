@@ -1,0 +1,7 @@
+site_name: Wave
+theme:
+  name: material
+extra_css:
+  - stylesheets/extra.css
+repo_url: https://github.com/BradSharp/Wave
+repo_name: BradSharp/Wave
