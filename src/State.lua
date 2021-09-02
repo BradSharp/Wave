@@ -4,13 +4,13 @@ function State.new(initialValue)
 	return setmetatable({
 		__subscribers = {},
 		__value = initialValue
-	}, Binding)
+	}, State)
 end
 
 function State.computeFrom(...)
 	local states = {...} -- TODO: Should we verify states doesn't contain a cyclic reference?
 	local compute = table.remove(states)
-	local self = Binding.new()
+	local self = State.new()
 	local function callback()
 		local values = {}
 		for i, binding in ipairs(states) do
