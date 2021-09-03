@@ -4,7 +4,6 @@ local SymbolCache	= require(script.SymbolCache)
 local Property		= SymbolCache.new()
 local Event			= SymbolCache.new()
 local Binding		= SymbolCache.new()
-local RunService	= game:GetService("RunService")
 local dirty			= {}
 
 local function flatten(value)
@@ -99,7 +98,19 @@ local function update()
 	end
 end
 
-RunService.RenderStepped:Connect(update)
+local scheduleUpdate do
+	local updateId = 0
+	local function tryUpdate(id)
+		if id == updateId then
+			updateId = 0
+			update()
+		end
+	end
+	function scheduleUpdate()
+		updateId = updateId + 1
+		task.defer(tryUpdate, updateId)
+	end
+end
 
 function Wave.new(T, properties, children)
 	local object = create(T)
@@ -119,6 +130,7 @@ function Wave.new(T, properties, children)
 						dirty[object] = properties
 					end
 					properties[key.Key] = newValue
+					scheduleUpdate()
 				end
 				table.insert(subscriptions, value:Track(queuePropertyUpdate))
 				assign(object, key.Key, value:Get())
