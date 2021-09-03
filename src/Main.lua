@@ -82,7 +82,9 @@ local function connect(instance, event, callback)
 end
 
 local function bind(instance, property, callback)
-	local connection = instance:GetPropertyChangedSignal(property):Connect(callback)
+	local connection = instance:GetPropertyChangedSignal(property):Connect(function ()
+		callback(instance[property])
+	end)
 	return function ()
 		connection:Disconnect()
 	end
@@ -142,8 +144,8 @@ function Wave.new(T, properties, children)
 		elseif KeyType == Change then
 			local handler = value
 			if ValueType == State then
-				handler = function ()
-					value:Set(object[key.Key])
+				handler = function (newValue)
+					value:Set(newValue)
 				end
 			end
 			table.insert(subscriptions, bind(object, key.Key, handler))
