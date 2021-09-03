@@ -1,4 +1,6 @@
 site_name: Wave
+repo_url: https://github.com/BradSharp/Wave
+repo_name: BradSharp/Wave
 theme:
     name: material
     logo: assets/images/logo_colored_64px.png
@@ -9,12 +11,15 @@ theme:
     features:
         - navigation.tabs
         - navigation.expand
-extra_css:
-    - assets/styles/style.css
-repo_url: https://github.com/BradSharp/Wave
-repo_name: BradSharp/Wave
 markdown_extensions:
     - admonition
     - pymdownx.details
     - pymdownx.highlight
     - pymdownx.superfences
+extra_css:
+    - assets/styles/style.css
+extra:
+    social:
+        - icon: fontawesome/brands/twitter
+          link: https://twitter.com/bradsharppp
+copyright: Copyright &copy; 2021 - 2021 Brad Sharp
