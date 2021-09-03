@@ -1,0 +1,22 @@
+:root * {
+	--md-primary-fg-color: #2C2C34;
+
+	--md-accent-fg-color: #11B5E4;
+	--md-accent-bg-color: #4FB986;
+
+	--md-code-fg-color: var(--md-primary-fg-color);
+	--md-code-bg-color: #F5F5F5;
+	--md-code-hl-operator-color: #6895a3;
+	--md-code-hl-keyword-color: #21D19F;
+	--md-code-hl-number-color: #0CAADC;
+	--md-code-hl-string-color: #11B5E4;
+	--md-code-hl-comment-color: #168D6B;
+	--md-code-hl-special-color: var(--md-code-hl-keyword-color);
+	--md-code-hl-function-color: var(--md-code-fg-color);
+	--md-code-hl-constant-color: var(--md-code-hl-keyword-color);
+	--md-code-hl-name-color: var(--md-code-fg-color);
+	--md-code-hl-punctuation-color: var(--md-code-hl-operator-color);
+	--md-code-hl-generic-color: var(--md-code-fg-color);
+	--md-code-hl-variable-color: var(--md-code-fg-color);
+
+}

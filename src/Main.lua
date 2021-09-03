@@ -3,7 +3,7 @@ local State			= require(script.State)
 local SymbolCache	= require(script.SymbolCache)
 local Property		= SymbolCache.new()
 local Event			= SymbolCache.new()
-local Binding		= SymbolCache.new()
+local Change		= SymbolCache.new()
 local dirty			= {}
 
 local function flatten(value)
@@ -139,7 +139,7 @@ function Wave.new(T, properties, children)
 			end
 		elseif KeyType == Event then
 			table.insert(subscriptions, connect(object, key.Key, value))
-		elseif KeyType == Binding then
+		elseif KeyType == Change then
 			local handler = value
 			if ValueType == State then
 				handler = function ()
@@ -161,6 +161,6 @@ end
 Wave.State = State
 Wave.Property = Property
 Wave.Event = Event
-Wave.Binding = Binding
+Wave.Change = Change
 
 return Wave
