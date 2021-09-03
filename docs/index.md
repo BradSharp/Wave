@@ -4,6 +4,11 @@ hide:
   - navigation
 ---
 
-# Overview
+<link rel="stylesheet" href="assets/styles/home.css">
 
-Wave is an incrementally adoptable declarative framework for use in apps, websites, and game interfaces created through Lua.
+<p align="center" width="100%">
+  <img height="64em" src="assets/images/logo_colored_128px.png" alt="Wave logo">
+</p>
+
+# Wave
+Incrementally adopted framework for declarative development in Lua
