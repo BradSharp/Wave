@@ -48,12 +48,75 @@ function State.__index:Track(callback)
 end
 
 function State.__index:Untrack(callback)
-	for i, subscriber in ipairs(self.__subscribers) do
-		if subscriber == callback then
-			table.remove(self.__subscribers, i)
-			break
-		end
-	end
+	local index = table.find(self.__subcribers, callback)
+	table.remove(self.__subscribers, index)
+end
+
+function State.__index:Chain(operator)
+	local state = State.new(operator(self.__value))
+	self:Track(function (_, value)
+		state:Set(operator(value))
+	end)
+	return state
+end
+
+function State:__tostring()
+	return "State(" .. tostring(self.__value) ..")"
+end
+
+
+function State:__unm()
+	return self:Chain(self, function (value)
+		return -value
+	end)
+end
+
+function State:__add(other)
+	return self:Chain(function (value)
+		return value + other
+	end)
+end
+
+function State:__sub(other)
+	return self:Chain(function (value)
+		return value - other
+	end)
+end
+
+function State:__mul(other)
+	return self:Chain(function (value)
+		return value * other
+	end)
+end
+
+function State:__div(other)
+	return self:Chain(self, function (value)
+		return value / other
+	end)
+end
+
+function State:__mod(other)
+	return self:Chain(self, function (value)
+		return value % other
+	end)
+end
+
+function State:__pow(other)
+	return self:Chain(self, function (value)
+		return value ^ other
+	end)
+end
+
+function State:__concat(other)
+	return self:Chain(self, function (value)
+		return value .. other
+	end)
+end
+
+function State:__call(other)
+	return self:Chain(self, function (value)
+		return value[other]
+	end)
 end
 
 return State
