@@ -4,7 +4,7 @@ hide:
   - navigation
 ---
 
-<link rel="stylesheet" href="assets/styles/home.css">
+<link rel="stylesheet" href="assets/stylesheets/home.css">
 
 <p align="center" width="100%">
   <img height="64em" src="assets/images/logo_colored_128px.png" alt="Wave logo">
