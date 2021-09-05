@@ -1,6 +1,11 @@
 site_name: Wave
 repo_url: https://github.com/BradSharp/Wave
 repo_name: BradSharp/Wave
+markdown_extensions:
+    - admonition
+    - pymdownx.details
+    - pymdownx.highlight
+    - pymdownx.superfences
 theme:
     name: material
     logo: assets/images/logo_colored_64px.png
@@ -9,13 +14,10 @@ theme:
         text: Nunito Sans
         code: JetBrains Mono
     features:
+        - navigation.indexes
         - navigation.tabs
-        - navigation.expand
-markdown_extensions:
-    - admonition
-    - pymdownx.details
-    - pymdownx.highlight
-    - pymdownx.superfences
+        - navigation.tracking
+        - navigation.top
 extra_css:
     - assets/stylesheets/style.css
 extra:
@@ -23,3 +25,11 @@ extra:
         - icon: fontawesome/brands/twitter
           link: https://twitter.com/bradsharppp
 copyright: Copyright &copy; 2021 - 2021 Brad Sharp
+nav:
+    - Home: index.md
+    - Getting Started:
+        - guide/index.md
+    - API Reference:
+        - api/index.md
+        - api/state.md
+        - api/symbols.md
