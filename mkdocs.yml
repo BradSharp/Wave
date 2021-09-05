@@ -28,8 +28,10 @@ copyright: Copyright &copy; 2021 - 2021 Brad Sharp
 nav:
     - Home: index.md
     - Getting Started:
-        - guide/index.md
+        - Introduction: guide/index.md
+        - States: guide/states.md
+        - Animations: guide/animations.md
     - API Reference:
         - api/index.md
-        - api/state.md
-        - api/symbols.md
+        - State: api/state.md
+        - Symbols: api/symbols.md

@@ -42,3 +42,8 @@
 	-webkit-mask-image: var(--md-admonition-icon--typedef);
 	mask-image: var(--md-admonition-icon--typedef);
 }
+
+article a {
+	text-decoration-line: underline;
+	text-decoration-style: dotted;
+}

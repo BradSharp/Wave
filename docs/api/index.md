@@ -1,36 +1,24 @@
 # Wave
 
+## Methods
 
-!!! hint
-	This is a test
+### createObject
 
-??? Test2
+!!! typedef "Object createObject(objectType : Class | string, properties : { Symbol, any }, children : any)"
 
-``` lua
-local tree = Wave.new("ScreenGui", {
-	IgnoreGuiInset = true,
-	Parent = PlayerGui
-}, {
-	Wave.new("Frame", {
-		Size = UDim2.new(1, 0, 1, 0),
-		--BackgroundColor3 = color,
-		Name = "Frame"
-	}, {
-		Wave.new("TextBox", {
-			Size = UDim2.new(0, 200, 0, 50),
-			Position = UDim2.new(0.5, 0, 0.5, 0),
-			AnchorPoint = Vector2.new(0.5, 1),
-			Text = "",
-			[Wave.Binding.Text] = input
-		}),
-		Wave.new("TextLabel", {
-			Size = UDim2.new(0, 200, 0, 50),
-			Position = UDim2.new(0.5, 0, 0.5, 0),
-			AnchorPoint = Vector2.new(0.5, 0),
-			Text = message
-		})
+Creates an object of the specified object type with the given properties assigned, and children parented to it.
+
+??? example
+	```lua
+	local textBox = Wave.createObject("TextBox", {
+		TextColor = Color3.fromHex("ffffff"),
+		PlaceholderText = "Type here...",
+		[Wave.Change.Text] = textInput,
 	})
-})
-```
+	```
 
-Okay, but loreum impsum dolor dopsum etsum idk what I'm typing
+<!-- ## State
+<a href="state">See State →</a>
+
+## Symbols
+<a href="symbols">See Symbols →</a> -->
