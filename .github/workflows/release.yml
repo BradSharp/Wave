@@ -9,14 +9,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: mkdir ~/.build
-      - run: cd ${{ github.workspace }}/Wave
-      - run: tar -cf ~/.build/release.tar .
-      - run: cd ~
+      - run: tar -cf release.tar -C ${{ github.workspace }} /Wave
       - uses: ncipollo/release-action@v1
         with:
-          tag: test3
+          tag: test4
           body: |
             Latest release of ${{ github.repository }}
-          artifacts: "~/.build/release.tar"
+          artifacts: "release.tar"
           token: ${{ secrets.GITHUB_TOKEN }}
