@@ -13,6 +13,7 @@ jobs:
       - run: ls ${{ github.workspace }}
       - uses: ncipollo/release-action@v1
         with:
+          tag: $GITHUB_SHA
           body: |
             Latest release of $GITHUB_REPOSITORY
           artifacts: "release.tar"
