@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: tar -cf release.tar -C ${{ github.workspace }} /Wave
+      - run: tar -cf release.tar -C ${{ github.workspace }}/Wave *
       - uses: ncipollo/release-action@v1
         with:
           tag: test4
