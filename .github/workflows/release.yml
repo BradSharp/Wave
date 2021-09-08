@@ -10,14 +10,12 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: tar -cf release.tar ${{ github.workspace }}/Wave
-      - uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - run: ls ${{ github.workspace }}
+      - uses: ncipollo/release-action@v1
         with:
-          tag_name: latest
-          release_name: Release $GITHUB_SHA
+          tag: latest
           body: |
             Latest release of $GITHUB_REPOSITORY
-          draft: false
           artifacts: "release.tar"
           prerelease: false
+          token: ${{ secrets.GITHUB_TOKEN }}
