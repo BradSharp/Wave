@@ -10,10 +10,10 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: mkdir .build
-      - run: tar -cf .build/release.tar -C ${{ github.workspace }}/Wave .
+      - run: tar -cf .build/release.tar -C ${{ github.workspace }}/Wave
       - uses: ncipollo/release-action@v1
         with:
-          tag: test2
+          tag: test3
           body: |
             Latest release of ${{ github.repository }}
           artifacts: ".build/release.tar"
