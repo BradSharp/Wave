@@ -17,5 +17,4 @@ jobs:
           body: |
             Latest release of $GITHUB_REPOSITORY
           artifacts: "release.tar"
-          prerelease: false
           token: ${{ secrets.GITHUB_TOKEN }}
