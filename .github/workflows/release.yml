@@ -9,9 +9,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: |
-        cd ${{ github.workspace }}
-        tar -cf release.tar Wave
+      - name: Create Tarball
+        run: |
+          cd ${{ github.workspace }}
+          tar -cf release.tar Wave
       - uses: ncipollo/release-action@v1
         with:
           tag: test4
