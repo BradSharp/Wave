@@ -9,6 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - run: mkdir .build
       - run: tar -cf .build/release.tar /Wave
       - uses: ncipollo/release-action@v1
         with:
