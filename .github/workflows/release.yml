@@ -10,8 +10,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: echo ${{ github.workspace }}
+      - run: tar -cf release.tar ${{ github.workspace }}/Wave
       - run: |
-        tar -cf release.tar ${{ github.workspace }}/Wave
         ls ${{ github.workspace }}
       - uses: ncipollo/release-action@v1
         with:
