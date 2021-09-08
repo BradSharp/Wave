@@ -1,4 +1,4 @@
-name: ci 
+name: release
 on:
   push:
     branches: 
@@ -9,13 +9,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: echo ${{ github.workspace }}
-      - run: tar -cf release.tar ${{ github.workspace }}/Wave
-      - run: ls ${{ github.workspace }}
+      - run: tar -cf .build/release.tar /Wave
       - uses: ncipollo/release-action@v1
         with:
-          tag: ${{ github.sha }}
+          tag: ${GITHUB_SHA::8}
           body: |
             Latest release of ${{ github.repository }}
-          artifacts: "release.tar"
+          artifacts: ".build/release.tar"
           token: ${{ secrets.GITHUB_TOKEN }}
