@@ -29,8 +29,8 @@ nav:
     - Home: index.md
     - Getting Started:
         - Introduction: guide/index.md
+        - Components: guide/components.md
         - States: guide/states.md
-        - Animations: guide/animations.md
     - API Reference:
         - api/index.md
         - State: api/state.md

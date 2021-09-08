@@ -122,7 +122,7 @@ States are clearly very useful then, but our button currently only shows the num
 
 Sometimes it can be useful to compose a value using another value, that is where computed states come in.
 
-In the counter example we saw how we could use a state to update a counter. We can create a new state from the count state which formats the value in a more user-friendly way.
+In the previous example we saw how we could use a state to update a counter. We can create a new state from the count state which formats the value in a more user-friendly way.
 
 ```lua hl_lines="2-4 15"
 local count = Wave.State.new(0)
@@ -155,3 +155,7 @@ Wave.createObject("ScreenGui", {
 ```
 
 Now everytime `count` is updated, our new state `message` will also update with the new value.
+
+---
+
+Ready for some more? Next up we'll learn how to make reusable [Components](components) for our app
