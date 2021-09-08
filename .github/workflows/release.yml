@@ -13,7 +13,7 @@ jobs:
       - run: tar -cf .build/release.tar ${{ github.workspace }}
       - uses: ncipollo/release-action@v1
         with:
-          tag: ${GITHUB_SHA::8}
+          tag: test
           body: |
             Latest release of ${{ github.repository }}
           artifacts: ".build/release.tar"
