@@ -26,10 +26,14 @@ Right now, Wave is targetted at Roblox developers. You can download and insert a
 
 ## Creating an App
 
-Let's start by creating a simple app:
+Let's start by creating a simple app. First we must initialize our app using the `createApp` method. This allows us to configure different settings for our app as well as create it.
 
 ```lua
-Wave.createObject("ScreenGui", {
+Wave.createApp(config, rootObject)
+```
+
+```lua
+Wave.createApp({}, Wave.createObject("ScreenGui", {
 	IgnoreGuiInset = true,
 	Parent = game:GetService("Players").LocalPlayer.PlayerGui
 }, {
@@ -39,7 +43,7 @@ Wave.createObject("ScreenGui", {
 		BackgroundColor3 = Color3.fromHex("eff8fa"),
 		Size = UDim2.fromScale(1, 1),
 	})
-})
+}))
 ```
 
 Great, we've just created our very first app using Wave! While our simple app is easy to get excited about it doesn't actually do much. We need some way to change the state of our app after it has been created.
@@ -57,7 +61,7 @@ local count = Wave.State.new(0)
 Once you have a state, it can be used directly in the place of a property. Take our example earlier, we can change the `Text` property of our TextLabel to be the newly created state:
 
 ```lua hl_lines="6"
-Wave.createObject("ScreenGui", {
+Wave.createApp({}, Wave.createObject("ScreenGui", {
 	IgnoreGuiInset = true,
 	Parent = game:GetService("Players").LocalPlayer.PlayerGui
 }, {
@@ -67,7 +71,7 @@ Wave.createObject("ScreenGui", {
 		BackgroundColor3 = Color3.fromHex("eff8fa"),
 		Size = UDim2.fromScale(1, 1),
 	})
-})
+}))
 ```
 
 We can then update the state whenever we want and our app will automatically reflect this change.
@@ -90,7 +94,7 @@ In this example we'll add a button with a counter on it that shows the number of
 ```lua hl_lines="19-21"
 local count = Wave.State.new(0)
 
-Wave.createObject("ScreenGui", {
+Wave.createApp({}, Wave.createObject("ScreenGui", {
 	IgnoreGuiInset = true,
 	Parent = game:GetService("Players").LocalPlayer.PlayerGui
 }, {
@@ -111,7 +115,7 @@ Wave.createObject("ScreenGui", {
 			end
 		})
 	})
-})
+}))
 ```
 
 <!-- Should I put something here about changes? Probably -->
@@ -130,7 +134,7 @@ local message = Wave.State.computeFrom(count, function (value)
 	return "You have clicked " .. value .. " times"
 end)
 
-Wave.createObject("ScreenGui", {
+Wave.createApp({}, Wave.createObject("ScreenGui", {
 	IgnoreGuiInset = true,
 	Parent = game:GetService("Players").LocalPlayer.PlayerGui
 }, {
@@ -151,7 +155,7 @@ Wave.createObject("ScreenGui", {
 			end
 		})
 	})
-})
+}))
 ```
 
 Now everytime `count` is updated, our new state `message` will also update with the new value.

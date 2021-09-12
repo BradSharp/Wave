@@ -68,3 +68,13 @@ A change symbol represents a property which invokes an event when it's value cha
 		[Wave.Change.Text] = textInput,
 	})
 	```
+
+## Layer
+
+!!! typedef "Wave.Layer[.symbolName]"
+
+## States
+
+!!! typedef "Wave.States[.symbolName]"
+
+Represents a state defined in the apps `States` table

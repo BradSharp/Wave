@@ -35,3 +35,6 @@ nav:
         - api/index.md
         - State: api/state.md
         - Symbols: api/symbols.md
+        - Types:
+            - App: api/app.md
+            - Object: api/object.md
