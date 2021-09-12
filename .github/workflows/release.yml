@@ -20,5 +20,5 @@ jobs:
           tag: ${{ github.event.inputs.releaseTag }}
           body: |
             Latest release of ${{ github.repository }}
-          artifacts: "${{ github.workspace }}/release.tar"
+          artifacts: "${{ github.workspace }}/release.tar.gz"
           token: ${{ secrets.GITHUB_TOKEN }}
