@@ -1,11 +1,15 @@
 local Wave			= {}
 local Platform		= require(script.Platform)
 local State			= require(script.State)
+local Object		= require(script.Object)
+local App			= require(script.App)
 local SymbolCache	= require(script.SymbolCache)
 local Class			= SymbolCache.new()
 local Property		= SymbolCache.new()
 local Event			= SymbolCache.new()
 local Change		= SymbolCache.new()
+local States		= SymbolCache.new()
+local Layer			= SymbolCache.new()
 
 local function flatten(value)
 	local result = {}
@@ -22,11 +26,7 @@ local function flatten(value)
 	return result
 end
 
-local function computeChildren(value)
-	return type(value) == "table" and flatten(value) or {value}
-end
-
-local function processProperty(subscriptions, object, key, value)
+local function processProperty(app, subscriptions, object, key, value)
 	local ValueType = getmetatable(value)
 	if ValueType == State then
 		table.insert(subscriptions, value:Track(function (_, newValue)
@@ -34,15 +34,22 @@ local function processProperty(subscriptions, object, key, value)
 		end))
 		Platform.assign(object, key.Name, value:Get())
 		return
+	elseif ValueType == States then
+		local state = app.States[value.Name]
+		table.insert(subscriptions, state:Track(function (_, newValue)
+			Platform.markDirty(object, key.Name, newValue)
+		end))
+		Platform.assign(object, key.Name, state:Get())
+		return
 	end
 	Platform.assign(object, key.Name, value)
 end
 
-local function processEvent(subscriptions, object, key, value)
+local function processEvent(app, subscriptions, object, key, value)
 	table.insert(subscriptions, Platform.connect(object, key.Name, value))
 end
 
-local function processChange(subscriptions, object, key, value)
+local function processChange(app, subscriptions, object, key, value)
 	local ValueType = getmetatable(value)
 	local handler = value
 	if ValueType == State then
@@ -53,36 +60,65 @@ local function processChange(subscriptions, object, key, value)
 	table.insert(subscriptions, Platform.changed(object, key.Name, handler))
 end
 
-function Wave.createObject(T, properties, children)
-	-- Component
+local function processLayer(app, subscriptions, object, properties)
+	local LayerType = getmetatable(properties)
+	if LayerType == State then
+		error("State is not yet supported for layers")
+	else
+		for key, value in pairs(properties) do
+			if type(key) == "string" then
+				key = Property[key]
+			end
+			local KeyType = getmetatable(key)
+			if KeyType == Property then
+				processProperty(app, subscriptions, object, key, value)
+			end
+		end
+	end
+end
+
+local computeChildren
+
+local function processObjectNode(app, objectNode, parent)
+	local T, properties, children = objectNode.__class, objectNode.__properties, objectNode.__children
 	if type(T) == "function" then
 		return T(properties, children)
-	end
-	-- Fundamental
-	if type(T) == "string" then
-		T = Class[T]
 	end
 	local object = Platform.new(T.Name)
 	local subscriptions = {}
 	if children then
 		if getmetatable(children) == State then
-			processProperty(subscriptions, object, Property.Children, children:Chain(computeChildren))
+			processProperty(subscriptions, object, Property.Children, children:Chain(function (value)
+				return computeChildren(app, value)
+			end))
 		else
-			processProperty(subscriptions, object, Property.Children, computeChildren(children))
+			processProperty(subscriptions, object, Property.Children, computeChildren(app, children))
 		end
 	end
+	local layers = {}
 	for key, value in pairs(properties) do
 		if type(key) == "string" then
 			key = Property[key]
 		end
 		local KeyType = getmetatable(key)
 		if KeyType == Property then
-			processProperty(subscriptions, object, key, value)
+			processProperty(app, subscriptions, object, key, value)
 		elseif KeyType == Event then
-			processEvent(subscriptions, object, key, value)
+			processEvent(app, subscriptions, object, key, value)
 		elseif KeyType == Change then
-			processChange(subscriptions, object, key, value)
+			processChange(app, subscriptions, object, key, value)
+		elseif KeyType == Layer then
+			table.insert(layers, {
+				Name = key.Name,
+				Properties = value,
+			})
 		end
+	end
+	table.sort(layers, function (first, second)
+		return first.Name < second.Name
+	end)
+	for _, layer in ipairs(layers) do
+		processLayer(app, subscriptions, object, layer.Properties)
 	end
 	Platform.deleted(object, function ()
 		for i = 1, #subscriptions do
@@ -93,10 +129,47 @@ function Wave.createObject(T, properties, children)
 	return object
 end
 
+function computeChildren(app, value)
+	local result = {}
+	local function add(objectNode)
+		if objectNode.__class == Class.Fragment then
+			for i, childObject in ipairs(objectNode.__children) do
+				add(childObject)
+			end
+		else
+			table.insert(result, processObjectNode(app, objectNode))
+		end
+	end
+	for i, v in ipairs(value) do
+		add(v)
+	end
+	return result
+end
+
+function Wave.createApp(config, objectNode)
+	local self = setmetatable({}, App)
+	self.States = config.States or {}
+	self.__children = computeChildren(self, {objectNode})
+	return self
+end
+
+function Wave.createFragment(children)
+	return Object.new(Class.Fragment, nil, children)
+end
+
+function Wave.createObject(T, properties, children)
+	if type(T) == "string" then
+		T = Class[T]
+	end
+	return Object.new(T, properties, children)
+end
+
 Wave.State = State
 Wave.Class = Class
 Wave.Property = Property
 Wave.Event = Event
 Wave.Change = Change
+Wave.States = States
+Wave.Layer = Layer
 
 return Wave
