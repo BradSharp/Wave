@@ -1,9 +1,13 @@
 name: release
 on:
-  push:
-    branches: 
-      - master
-      - main
+  workflow-dispatch:
+    inputs:
+      releaseTag:
+        description: Release Tag
+        required: true
+        default:
+      tags:
+        description: 'Test scenario tags'  
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -15,7 +19,7 @@ jobs:
           tar -cf release.tar Wave
       - uses: ncipollo/release-action@v1
         with:
-          tag: test4
+          tag: ${{ github.event.inputs.releaseTag }}
           body: |
             Latest release of ${{ github.repository }}
           artifacts: "${{ github.workspace }}/release.tar"
