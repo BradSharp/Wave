@@ -14,7 +14,7 @@ jobs:
       - name: Create Tarball
         run: |
           cd ${{ github.workspace }}
-          tar -cf release.tar Wave
+          tar -cfz release.tar Wave
       - uses: ncipollo/release-action@v1
         with:
           tag: ${{ github.event.inputs.releaseTag }}
