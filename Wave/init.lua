@@ -8,8 +8,6 @@ local Class			= SymbolCache.new()
 local Property		= SymbolCache.new()
 local Event			= SymbolCache.new()
 local Change		= SymbolCache.new()
-local States		= SymbolCache.new()
-local Layer			= SymbolCache.new()
 
 local function flatten(value)
 	local result = {}
@@ -30,23 +28,16 @@ local function processProperty(app, subscriptions, object, key, value)
 	local ValueType = getmetatable(value)
 	if ValueType == State then
 		table.insert(subscriptions, value:Track(function (_, newValue)
-			Platform.markDirty(object, key.Name, newValue)
+			Platform.markDirty(object, key.Index, newValue)
 		end))
-		Platform.assign(object, key.Name, value:Get())
-		return
-	elseif ValueType == States then
-		local state = app.States[value.Name]
-		table.insert(subscriptions, state:Track(function (_, newValue)
-			Platform.markDirty(object, key.Name, newValue)
-		end))
-		Platform.assign(object, key.Name, state:Get())
+		Platform.assign(object, key.Index, value:Get())
 		return
 	end
-	Platform.assign(object, key.Name, value)
+	Platform.assign(object, key.Index, value)
 end
 
 local function processEvent(app, subscriptions, object, key, value)
-	table.insert(subscriptions, Platform.connect(object, key.Name, value))
+	table.insert(subscriptions, Platform.connect(object, key.Index, value))
 end
 
 local function processChange(app, subscriptions, object, key, value)
@@ -57,7 +48,7 @@ local function processChange(app, subscriptions, object, key, value)
 			value:Set(newValue)
 		end
 	end
-	table.insert(subscriptions, Platform.changed(object, key.Name, handler))
+	table.insert(subscriptions, Platform.changed(object, key.Index, handler))
 end
 
 local function processLayer(app, subscriptions, object, properties)
@@ -84,7 +75,7 @@ local function processObjectNode(app, objectNode, parent)
 	if type(T) == "function" then
 		return T(properties, children)
 	end
-	local object = Platform.new(T.Name)
+	local object = Platform.new(T.Index)
 	local subscriptions = {}
 	if children then
 		if getmetatable(children) == State then
@@ -107,18 +98,7 @@ local function processObjectNode(app, objectNode, parent)
 			processEvent(app, subscriptions, object, key, value)
 		elseif KeyType == Change then
 			processChange(app, subscriptions, object, key, value)
-		elseif KeyType == Layer then
-			table.insert(layers, {
-				Name = key.Name,
-				Properties = value,
-			})
 		end
-	end
-	table.sort(layers, function (first, second)
-		return first.Name < second.Name
-	end)
-	for _, layer in ipairs(layers) do
-		processLayer(app, subscriptions, object, layer.Properties)
 	end
 	Platform.deleted(object, function ()
 		for i = 1, #subscriptions do
@@ -148,7 +128,6 @@ end
 
 function Wave.createApp(config, objectNode)
 	local self = setmetatable({}, App)
-	self.States = config.States or {}
 	self.__children = computeChildren(self, {objectNode})
 	return self
 end
@@ -169,7 +148,6 @@ Wave.Class = Class
 Wave.Property = Property
 Wave.Event = Event
 Wave.Change = Change
-Wave.States = States
 Wave.Layer = Layer
 
 return Wave
